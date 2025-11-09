@@ -52,7 +52,8 @@ async function bootstrap() {
   SwaggerModule.setup('api', app, document);
 
   const port = process.env.PORT ? parseInt(process.env.PORT, 10) : 3001; // Use PORT from environment or fallback to 3001
-  const host = process.env.NODE_ENV === 'production' ? '0.0.0.0' : 'localhost'; // Listen on 0.0.0.0 in production for Render
+  // Listen on 0.0.0.0 if PORT is set (Render always sets PORT) or if in production
+  const host = (process.env.PORT || process.env.NODE_ENV === 'production') ? '0.0.0.0' : 'localhost';
   try {
     await app.listen(port, host);
     console.log(`Application is running on: http://${host}:${port}`);
