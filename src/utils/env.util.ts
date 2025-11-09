@@ -12,14 +12,9 @@ export function isProduction(): boolean {
     return true;
   }
 
-  // Check if PORT is set (Render always sets PORT)
+  // Check if PORT is set (production services usually set PORT)
   // In local development, we usually use a default port
   if (process.env.PORT && process.env.PORT !== '3002' && process.env.PORT !== '3000') {
-    return true;
-  }
-
-  // Check if running on Render (hostname contains render.com)
-  if (process.env.RENDER || process.env.RENDER_SERVICE_NAME) {
     return true;
   }
 

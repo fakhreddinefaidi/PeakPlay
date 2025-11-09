@@ -58,12 +58,12 @@ export class AuthController {
     try {
       console.log(`[LOGIN] Tentative de connexion pour: ${loginDto.email}`);
       
-      const user = await this.authService.validateUser(
-        loginDto.email,
-        loginDto.password,
-      );
+    const user = await this.authService.validateUser(
+      loginDto.email,
+      loginDto.password,
+    );
 
-      if (!user) {
+    if (!user) {
         console.log(`[LOGIN] Échec de validation pour: ${loginDto.email}`);
         // Vérifier si l'utilisateur existe mais n'a pas vérifié son email
         const userExists = await this.authService.findUserByEmail(loginDto.email);
@@ -72,12 +72,12 @@ export class AuthController {
           throw new UnauthorizedException('Veuillez vérifier votre adresse email avant de vous connecter. Vérifiez votre boîte de réception.');
         }
         console.log(`[LOGIN] Email ou mot de passe incorrect pour: ${loginDto.email}`);
-        throw new UnauthorizedException('Email ou mot de passe incorrect');
-      }
+      throw new UnauthorizedException('Email ou mot de passe incorrect');
+    }
 
       console.log(`[LOGIN] Utilisateur validé: ${user.email}`);
 
-      const token = (await this.authService.login(user))?.access_token;
+    const token = (await this.authService.login(user))?.access_token;
 
       if (!token) {
         console.error(`[LOGIN] Erreur lors de la génération du token pour: ${loginDto.email}`);
@@ -101,11 +101,11 @@ export class AuthController {
 
       const isProd = shouldUseSecureCookies();
       const cookieOptions: any = {
-        httpOnly: true,
-        secure: isProd,
-        sameSite: isProd ? 'none' : 'lax',
+      httpOnly: true,
+      secure: isProd,
+      sameSite: isProd ? 'none' : 'lax',
         maxAge: 1000 * 60 * 60, // 1 heure
-        path: '/',
+      path: '/',
       };
 
       // En production avec HTTPS, ajouter domain si nécessaire
