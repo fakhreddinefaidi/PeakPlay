@@ -108,13 +108,19 @@ export class AuthService {
       // (Facebook et Google garantissent déjà la vérification de l'email)
       if (savedUser.provider !== 'facebook' && savedUser.provider !== 'google') {
         try {
+          console.log('📧 Tentative d\'envoi d\'email de vérification pour:', createUserDto.email);
           await this.mailService.sendVerificationEmail(
             createUserDto.email,
             verificationToken,
           );
-          console.log('📧 Email de vérification envoyé');
+          console.log('✅ Email de vérification envoyé avec succès');
         } catch (emailError) {
-          console.error('❌ Erreur lors de l\'envoi de l\'email (non bloquant):', emailError);
+          console.error('❌ Erreur lors de l\'envoi de l\'email (non bloquant):', emailError.message);
+          console.error('❌ Code d\'erreur:', emailError.code);
+          console.error('❌ Response code:', emailError.responseCode);
+          console.error('❌ Stack trace:', emailError.stack);
+          console.error('⚠️ L\'utilisateur a été créé mais l\'email de vérification n\'a pas pu être envoyé');
+          console.error('⚠️ Vous pouvez renvoyer l\'email via POST /api/v1/auth/resend-verification');
           // Ne pas bloquer l'enregistrement si l'email échoue
         }
       } else {
