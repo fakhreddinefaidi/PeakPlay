@@ -21,6 +21,7 @@
     "test:e2e:polyfill": "node -r ./scripts/polyfill-availableParallelism.js node_modules/jest/bin/jest.js --config ./test/jest-e2e.json"
   },
   "dependencies": {
+    "@getbrevo/brevo": "^3.0.1",
     "@nestjs/common": "^11.0.1",
     "@nestjs/config": "^4.0.2",
     "@nestjs/core": "^11.0.1",
