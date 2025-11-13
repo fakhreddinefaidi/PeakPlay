@@ -18,7 +18,7 @@ export class MailService {
   }
 
   async sendVerificationEmail(to: string, token: string) {
-    const backendUrl = process.env.BACKEND_URL || 'http://localhost:3002';
+    const backendUrl = process.env.BACKEND_URL || 'http://localhost:3001';
     const verifyUrl = `${backendUrl}/api/v1/auth/verify-email?token=${token}`;
     const mailFrom = process.env.MAIL_FROM || `"DAM Backend" <${process.env.MAIL_USER}>`;
     

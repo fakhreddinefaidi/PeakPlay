@@ -26,7 +26,7 @@ if (!process.env.JWT_SECRET || process.env.JWT_SECRET.length < 20) {
       envFilePath: '.env',
       validationSchema: Joi.object({
         NODE_ENV: Joi.string().valid('development', 'production', 'test').default('development'),
-        PORT: Joi.number().default(3002),
+        PORT: Joi.number().default(3001),
         MONGODB_URI: Joi.string().default('mongodb://localhost:27017/dam_backend'),
         // Require a JWT secret in non-demo environments to avoid insecure defaults.
         JWT_SECRET: Joi.when('NODE_ENV', {
@@ -50,7 +50,7 @@ if (!process.env.JWT_SECRET || process.env.JWT_SECRET.length < 20) {
         MAIL_USER: Joi.string().when('NODE_ENV', { is: 'production', then: Joi.required(), otherwise: Joi.allow('', null) }),
         MAIL_PASS: Joi.string().when('NODE_ENV', { is: 'production', then: Joi.required(), otherwise: Joi.allow('', null) }),
         MAIL_FROM: Joi.string().when('NODE_ENV', { is: 'production', then: Joi.required(), otherwise: Joi.allow('', null) }),
-        BACKEND_URL: Joi.string().default('http://localhost:3002'),
+        BACKEND_URL: Joi.string().default('http://localhost:3001'),
       }).unknown(true),
       validationOptions: {
         abortEarly: false,
