@@ -46,8 +46,10 @@ if (!process.env.JWT_SECRET || process.env.JWT_SECRET.length < 20) {
 
         // Email configuration (Brevo API uniquement - pas de SMTP)
         BREVO_API_KEY: Joi.string().when('NODE_ENV', { is: 'production', then: Joi.required(), otherwise: Joi.allow('', null) }),
-        MAIL_FROM: Joi.string().default('DAM Backend <9b8f34001@smtp-brevo.com>'),
+        MAIL_FROM_EMAIL: Joi.string().email().default('9b8f34001@smtp-brevo.com'),
+        MAIL_FROM_NAME: Joi.string().default('PeakPlay'),
         BACKEND_URL: Joi.string().default('http://localhost:3001'),
+        FRONTEND_URL: Joi.string().allow('', null),
       }).unknown(true),
       validationOptions: {
         abortEarly: false,

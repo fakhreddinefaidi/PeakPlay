@@ -23,26 +23,15 @@ export class MailService {
       
       // En développement, créer une instance vide (les emails échoueront mais l'app démarre)
       this.apiInstance = null;
-      this.senderEmail = '9b8f34001@smtp-brevo.com';
-      this.senderName = 'DAM Backend';
+      this.senderEmail = process.env.MAIL_FROM_EMAIL || '9b8f34001@smtp-brevo.com';
+      this.senderName = process.env.MAIL_FROM_NAME || 'PeakPlay';
       console.warn('⚠️ [MAIL_SERVICE] Mode développement: service d\'email désactivé');
       return;
     }
 
-    // Parser MAIL_FROM depuis .env
-    // Format attendu: "DAM Backend <9b8f34001@smtp-brevo.com>"
-    const mailFromEnv = process.env.MAIL_FROM || 'DAM Backend <9b8f34001@smtp-brevo.com>';
-    
-    // Extraire l'email et le nom du format "Name <email@domain.com>"
-    const mailFromMatch = mailFromEnv.match(/^(.+?)\s*<(.+?)>$/);
-    if (mailFromMatch) {
-      this.senderName = mailFromMatch[1].trim();
-      this.senderEmail = mailFromMatch[2].trim();
-    } else {
-      console.warn('⚠️ [MAIL_SERVICE] Format MAIL_FROM invalide, utilisation du format par défaut');
-      this.senderName = 'DAM Backend';
-      this.senderEmail = '9b8f34001@smtp-brevo.com';
-    }
+    // Charger MAIL_FROM_EMAIL et MAIL_FROM_NAME depuis .env
+    this.senderEmail = process.env.MAIL_FROM_EMAIL || '9b8f34001@smtp-brevo.com';
+    this.senderName = process.env.MAIL_FROM_NAME || 'PeakPlay';
 
     // Initialiser l'API Brevo
     this.apiInstance = new TransactionalEmailsApi();
@@ -76,43 +65,31 @@ export class MailService {
         name: this.senderName,
       },
       to: [{ email: to }],
-      subject: 'Vérification de votre email - DAM Backend',
+      subject: 'Vérification de votre email - PeakPlay',
       htmlContent: `
-        <!DOCTYPE html>
         <html>
-        <head>
-          <meta charset="utf-8">
-          <style>
-            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-            .header { background-color: #4CAF50; color: white; padding: 20px; text-align: center; border-radius: 5px 5px 0 0; }
-            .content { background-color: #f9f9f9; padding: 30px; border-radius: 0 0 5px 5px; }
-            .button { display: inline-block; padding: 12px 30px; background-color: #4CAF50; color: white; text-decoration: none; border-radius: 5px; margin: 20px 0; }
-            .footer { text-align: center; margin-top: 20px; color: #666; font-size: 12px; }
-          </style>
-        </head>
-        <body>
-          <div class="container">
-            <div class="header">
-              <h1>Bienvenue sur DAM Backend !</h1>
-            </div>
-            <div class="content">
-              <p>Bonjour,</p>
-              <p>Merci de vous être inscrit. Pour finaliser votre inscription et activer votre compte, veuillez vérifier votre adresse email en cliquant sur le bouton ci-dessous :</p>
-              <div style="text-align: center;">
-                <a href="${url}" class="button" style="color: white;">Vérifier mon email</a>
+          <head>
+            <meta charset="utf-8">
+          </head>
+          <body style="font-family: Arial; background:#f9fafb; padding:20px; margin:0;">
+            <div style="max-width:600px; margin:auto; background:#ffffff; padding:30px; border-radius:10px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+              <h2 style="color:#111827; text-align:center; margin-top:0;">Bienvenue sur PeakPlay 🎮</h2>
+              <p style="font-size:16px; color:#374151; line-height:1.6;">Merci de vous être inscrit. Cliquez sur le bouton ci-dessous pour vérifier votre email :</p>
+              <div style="text-align:center; margin:30px 0;">
+                <a href="${url}" style="display:inline-block; background:#3b82f6; color:white; padding:14px 24px; border-radius:8px; text-decoration:none; font-weight:bold; text-align:center; font-size:16px; transition:background-color 0.2s;">Vérifier mon email</a>
               </div>
-              <p>Ou copiez ce lien dans votre navigateur :</p>
-              <p style="word-break: break-all; color: #4CAF50; background: #f0f0f0; padding: 10px; border-radius: 3px;">${url}</p>
-              <p><strong>⚠️ Ce lien expirera dans 24 heures.</strong></p>
-              <p>Si vous n'avez pas créé de compte, vous pouvez ignorer cet email.</p>
-              <p>Cordialement,<br>L'équipe DAM Backend</p>
+              <p style="margin-top:30px; font-size:14px; color:#6b7280; line-height:1.6;">
+                Si le bouton ne fonctionne pas, copiez ce lien dans votre navigateur :<br>
+                <span style="word-break: break-all; color:#3b82f6;">${url}</span>
+              </p>
+              <p style="margin-top:20px; font-size:12px; color:#9ca3af; text-align:center;">
+                ⚠️ Ce lien expirera dans 24 heures.
+              </p>
+              <p style="margin-top:20px; font-size:14px; color:#6b7280; text-align:center;">
+                Si vous n'avez pas créé de compte, vous pouvez ignorer cet email.
+              </p>
             </div>
-            <div class="footer">
-              <p>Cet email a été envoyé automatiquement, merci de ne pas y répondre.</p>
-            </div>
-          </div>
-        </body>
+          </body>
         </html>
       `,
     };
