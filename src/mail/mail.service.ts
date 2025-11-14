@@ -93,6 +93,7 @@ export class MailService {
           </body>
         </html>
       `,
+      textContent: `Bienvenue sur PeakPlay ⚽\n\nMerci de vous être inscrit. Cliquez sur le lien ci-dessous pour vérifier votre email :\n\n${url}\n\n⚠️ Ce lien expirera dans 24 heures.\n\nSi vous n'avez pas créé de compte, vous pouvez ignorer cet email.`,
     };
 
     try {
@@ -180,6 +181,7 @@ export class MailService {
           </body>
         </html>
       `,
+      textContent: `🔐 Nouvelle connexion détectée\n\nBonjour,\n\nUne connexion à votre compte PeakPlay ⚽ a été effectuée avec succès.\n\nDate et heure : ${formattedDate}${loginInfo?.ip ? `\nAdresse IP : ${loginInfo.ip}` : ''}\n\n⚠️ Si vous n'êtes pas à l'origine de cette connexion, veuillez changer votre mot de passe immédiatement.\n\nCordialement,\nL'équipe PeakPlay\n\nCeci est un email automatique, merci de ne pas y répondre.`,
     };
 
     try {

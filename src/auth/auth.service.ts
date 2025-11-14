@@ -112,8 +112,13 @@ export class AuthService {
           // Render: BACKEND_URL=https://dam-backend.onrender.com
           // Local: BACKEND_URL=http://localhost:3001
           const backendUrl = process.env.BACKEND_URL || 'http://localhost:3001';
-          // Nettoyer l'URL (supprimer le slash final si présent)
-          const cleanBackendUrl = backendUrl.replace(/\/$/, '');
+          // Nettoyer l'URL : supprimer les espaces, les guillemets, les slashes finaux, et les caractères étranges
+          const cleanBackendUrl = backendUrl
+            .trim()                                    // Supprimer les espaces avant/après
+            .replace(/^["']|["']$/g, '')              // Supprimer les guillemets au début/fin
+            .replace(/\/+$/, '')                       // Supprimer les slashes finaux (un ou plusieurs)
+            .replace(/[=]+$/, '')                      // Supprimer les = à la fin (comme ==)
+            .replace(/\s+/g, '');                      // Supprimer tous les espaces
           const verifyUrl = `${cleanBackendUrl}/api/v1/auth/verify-email?token=${verificationToken}`;
           
           console.log('📧 [REGISTER] Génération de l\'URL de vérification');
@@ -121,6 +126,9 @@ export class AuthService {
           console.log(`   → URL nettoyée: ${cleanBackendUrl}`);
           console.log(`   → URL complète: ${verifyUrl}`);
           console.log(`   → Token: ${verificationToken.substring(0, 20)}...`);
+          console.log(`   → BREVO_API_KEY: ${process.env.BREVO_API_KEY ? '✅ Défini' : '❌ NON DÉFINI'}`);
+          console.log(`   → MAIL_FROM_EMAIL: ${process.env.MAIL_FROM_EMAIL || 'Non défini (utilise défaut)'}`);
+          console.log(`   → MAIL_FROM_NAME: ${process.env.MAIL_FROM_NAME || 'Non défini (utilise défaut)'}`);
           
           await this.mailService.sendVerificationEmail(
             createUserDto.email,
@@ -131,6 +139,7 @@ export class AuthService {
           console.error('❌ [REGISTER] Erreur lors de l\'envoi de l\'email (non bloquant)');
           console.error(`   → Email: ${createUserDto.email}`);
           console.error(`   → Erreur: ${emailError.message || 'Unknown error'}`);
+          console.error(`   → Stack: ${emailError.stack || 'No stack trace'}`);
           if (emailError.response?.body) {
             console.error(`   → Détails Brevo API:`, JSON.stringify(emailError.response.body, null, 2));
           }
@@ -349,8 +358,13 @@ export class AuthService {
 
     // Générer l'URL de vérification avec BACKEND_URL (compatible Render)
     const backendUrl = process.env.BACKEND_URL || 'http://localhost:3001';
-    // Nettoyer l'URL (supprimer le slash final si présent)
-    const cleanBackendUrl = backendUrl.replace(/\/$/, '');
+    // Nettoyer l'URL : supprimer les espaces, les guillemets, les slashes finaux, et les caractères étranges
+    const cleanBackendUrl = backendUrl
+      .trim()                                    // Supprimer les espaces avant/après
+      .replace(/^["']|["']$/g, '')              // Supprimer les guillemets au début/fin
+      .replace(/\/+$/, '')                       // Supprimer les slashes finaux (un ou plusieurs)
+      .replace(/[=]+$/, '')                      // Supprimer les = à la fin (comme ==)
+      .replace(/\s+/g, '');                      // Supprimer tous les espaces
     const verifyUrl = `${cleanBackendUrl}/api/v1/auth/verify-email?token=${verificationToken}`;
     
     console.log('📧 [RESEND_VERIFICATION] Génération de l\'URL de vérification');
@@ -358,6 +372,9 @@ export class AuthService {
     console.log(`   → URL nettoyée: ${cleanBackendUrl}`);
     console.log(`   → URL complète: ${verifyUrl}`);
     console.log(`   → Token: ${verificationToken.substring(0, 20)}...`);
+    console.log(`   → BREVO_API_KEY: ${process.env.BREVO_API_KEY ? '✅ Défini' : '❌ NON DÉFINI'}`);
+    console.log(`   → MAIL_FROM_EMAIL: ${process.env.MAIL_FROM_EMAIL || 'Non défini (utilise défaut)'}`);
+    console.log(`   → MAIL_FROM_NAME: ${process.env.MAIL_FROM_NAME || 'Non défini (utilise défaut)'}`);
     
     await this.mailService.sendVerificationEmail(
       user.email,
