@@ -108,25 +108,44 @@ export class AuthService {
       // (Facebook et Google garantissent déjà la vérification de l'email)
       if (savedUser.provider !== 'facebook' && savedUser.provider !== 'google') {
         try {
-          console.log('📧 Tentative d\'envoi d\'email de vérification pour:', createUserDto.email);
+          // Générer l'URL de vérification avec BACKEND_URL (compatible Render)
+          // Render: BACKEND_URL=https://dam-backend.onrender.com
+          // Local: BACKEND_URL=http://localhost:3001
           const backendUrl = process.env.BACKEND_URL || 'http://localhost:3001';
-          const verifyUrl = `${backendUrl}/api/v1/auth/verify-email?token=${verificationToken}`;
+          // Nettoyer l'URL (supprimer le slash final si présent)
+          const cleanBackendUrl = backendUrl.replace(/\/$/, '');
+          const verifyUrl = `${cleanBackendUrl}/api/v1/auth/verify-email?token=${verificationToken}`;
+          
+          console.log('📧 [REGISTER] Génération de l\'URL de vérification');
+          console.log(`   → BACKEND_URL: ${backendUrl}`);
+          console.log(`   → URL nettoyée: ${cleanBackendUrl}`);
+          console.log(`   → URL complète: ${verifyUrl}`);
+          console.log(`   → Token: ${verificationToken.substring(0, 20)}...`);
+          
           await this.mailService.sendVerificationEmail(
             createUserDto.email,
             verifyUrl,
           );
-          console.log('✅ Email de vérification envoyé avec succès');
+          console.log(`✅ [REGISTER] Email de vérification envoyé avec succès à ${createUserDto.email}`);
         } catch (emailError) {
-          console.error('❌ Erreur lors de l\'envoi de l\'email (non bloquant):', emailError.message);
-          console.error('❌ Response:', emailError.response?.body);
-          console.error('❌ Status:', emailError.status);
-          console.error('❌ Stack trace:', emailError.stack);
-          console.error('⚠️ L\'utilisateur a été créé mais l\'email de vérification n\'a pas pu être envoyé');
-          console.error('⚠️ Vous pouvez renvoyer l\'email via POST /api/v1/auth/resend-verification');
+          console.error('❌ [REGISTER] Erreur lors de l\'envoi de l\'email (non bloquant)');
+          console.error(`   → Email: ${createUserDto.email}`);
+          console.error(`   → Erreur: ${emailError.message || 'Unknown error'}`);
+          if (emailError.response?.body) {
+            console.error(`   → Détails Brevo API:`, JSON.stringify(emailError.response.body, null, 2));
+          }
+          if (emailError.status) {
+            console.error(`   → Status HTTP: ${emailError.status}`);
+          }
+          if (emailError.response?.statusCode) {
+            console.error(`   → Status Code: ${emailError.response.statusCode}`);
+          }
+          console.error('⚠️ [REGISTER] L\'utilisateur a été créé mais l\'email de vérification n\'a pas pu être envoyé');
+          console.error('⚠️ [REGISTER] Vous pouvez renvoyer l\'email via POST /api/v1/auth/resend-verification');
           // Ne pas bloquer l'enregistrement si l'email échoue
         }
       } else {
-        console.log('ℹ️ Utilisateur OAuth détecté - pas d\'email de vérification nécessaire');
+        console.log('ℹ️ [REGISTER] Utilisateur OAuth détecté - pas d\'email de vérification nécessaire');
       }
       
       const { password, ...result } = savedUser.toObject();
@@ -328,8 +347,18 @@ export class AuthService {
     user.verificationTokenExpires = new Date(Date.now() + 24 * 60 * 60 * 1000);
     await user.save();
 
+    // Générer l'URL de vérification avec BACKEND_URL (compatible Render)
     const backendUrl = process.env.BACKEND_URL || 'http://localhost:3001';
-    const verifyUrl = `${backendUrl}/api/v1/auth/verify-email?token=${verificationToken}`;
+    // Nettoyer l'URL (supprimer le slash final si présent)
+    const cleanBackendUrl = backendUrl.replace(/\/$/, '');
+    const verifyUrl = `${cleanBackendUrl}/api/v1/auth/verify-email?token=${verificationToken}`;
+    
+    console.log('📧 [RESEND_VERIFICATION] Génération de l\'URL de vérification');
+    console.log(`   → BACKEND_URL: ${backendUrl}`);
+    console.log(`   → URL nettoyée: ${cleanBackendUrl}`);
+    console.log(`   → URL complète: ${verifyUrl}`);
+    console.log(`   → Token: ${verificationToken.substring(0, 20)}...`);
+    
     await this.mailService.sendVerificationEmail(
       user.email,
       verifyUrl,

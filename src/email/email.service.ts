@@ -1,3 +1,11 @@
+/**
+ * ⚠️ SERVICE OBSOLÈTE - NE PLUS UTILISER
+ * 
+ * Ce service utilise SMTP (nodemailer) et est remplacé par MailService
+ * qui utilise l'API Brevo directement.
+ * 
+ * @deprecated Utilisez MailService à la place (src/mail/mail.service.ts)
+ */
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as nodemailer from 'nodemailer';

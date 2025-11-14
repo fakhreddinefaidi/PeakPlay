@@ -44,14 +44,9 @@ if (!process.env.JWT_SECRET || process.env.JWT_SECRET.length < 20) {
         FACEBOOK_APP_SECRET: Joi.string().when('NODE_ENV', { is: 'production', then: Joi.required(), otherwise: Joi.allow('', null) }),
         FACEBOOK_CALLBACK_URL: Joi.string().when('NODE_ENV', { is: 'production', then: Joi.required(), otherwise: Joi.allow('', null) }),
 
-        // Email configuration (Brevo API)
+        // Email configuration (Brevo API uniquement - pas de SMTP)
         BREVO_API_KEY: Joi.string().when('NODE_ENV', { is: 'production', then: Joi.required(), otherwise: Joi.allow('', null) }),
-        // Email configuration (SMTP - deprecated, kept for backward compatibility)
-        MAIL_HOST: Joi.string().when('NODE_ENV', { is: 'production', then: Joi.required(), otherwise: Joi.allow('', null) }),
-        MAIL_PORT: Joi.number().default(587),
-        MAIL_USER: Joi.string().when('NODE_ENV', { is: 'production', then: Joi.required(), otherwise: Joi.allow('', null) }),
-        MAIL_PASS: Joi.string().when('NODE_ENV', { is: 'production', then: Joi.required(), otherwise: Joi.allow('', null) }),
-        MAIL_FROM: Joi.string().when('NODE_ENV', { is: 'production', then: Joi.required(), otherwise: Joi.allow('', null) }),
+        MAIL_FROM: Joi.string().default('DAM Backend <9b8f34001@smtp-brevo.com>'),
         BACKEND_URL: Joi.string().default('http://localhost:3001'),
       }).unknown(true),
       validationOptions: {

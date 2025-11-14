@@ -12,9 +12,13 @@ export class FacebookStrategy extends PassportStrategy(Strategy, 'facebook') {
   ) {
     const appID = configService.get<string>('FACEBOOK_APP_ID') || '';
     const appSecret = configService.get<string>('FACEBOOK_APP_SECRET') || '';
+    // Utiliser FACEBOOK_CALLBACK_URL si défini, sinon construire depuis BACKEND_URL
+    const backendUrl = configService.get<string>('BACKEND_URL') || 'http://localhost:3001';
+    const cleanBackendUrl = backendUrl.replace(/\/$/, ''); // Nettoyer le slash final
+    const defaultCallbackURL = `${cleanBackendUrl}/api/v1/auth/facebook/redirect`;
     const callbackURL =
       configService.get<string>('FACEBOOK_CALLBACK_URL') ||
-      'http://localhost:3002/api/v1/auth/facebook/redirect';
+      defaultCallbackURL;
 
     super({
       clientID: appID,

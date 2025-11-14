@@ -16,9 +16,11 @@ async function bootstrap() {
   );
 
   // Enable CORS for frontend links and cookies
+  // En production, utiliser FRONTEND_URL spécifique, sinon autoriser toutes les origines en développement
   const frontend = process.env.FRONTEND_URL;
+  const isProduction = process.env.NODE_ENV === 'production';
   const corsOptions = {
-    origin: frontend || '*',
+    origin: isProduction && frontend ? frontend : frontend || '*',
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
