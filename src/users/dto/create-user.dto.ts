@@ -57,5 +57,5 @@ export class CreateUserDto {
     message: 'role must be one of the following values: JOUEUR, ACADEMY, ARBITRE' 
   })
   @IsNotEmpty({ message: 'role should not be empty' })
-  role: UserRole;
+  role: UserRole | string;
 }

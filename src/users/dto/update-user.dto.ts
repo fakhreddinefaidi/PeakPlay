@@ -49,5 +49,5 @@ export class UpdateUserDto {
     message: 'role must be one of the following values: JOUEUR, ACADEMY, ARBITRE' 
   })
   @IsOptional()
-  role?: UserRole;
+  role?: UserRole | string;
 }
