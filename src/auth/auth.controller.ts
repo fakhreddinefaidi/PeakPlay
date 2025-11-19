@@ -65,23 +65,8 @@ export class AuthController {
 
     if (!user) {
         console.log(`[LOGIN] Échec de validation pour: ${loginDto.email}`);
-        // Vérifier si l'utilisateur existe mais n'a pas vérifié son email
-        const userExists = await this.authService.findUserByEmail(loginDto.email);
-        if (userExists && !userExists.emailVerified) {
-          console.log(`[LOGIN] Email non vérifié pour: ${loginDto.email}`);
-          // Envoyer automatiquement un email de vérification
-          try {
-            console.log(`[LOGIN] Envoi automatique d'email de vérification pour: ${loginDto.email}`);
-            await this.authService.resendVerificationEmail(loginDto.email);
-            console.log(`[LOGIN] Email de vérification envoyé avec succès à: ${loginDto.email}`);
-          } catch (emailError) {
-            // Ne pas bloquer si l'email échoue, mais logger l'erreur
-            console.error(`[LOGIN] Erreur lors de l'envoi de l'email de vérification pour ${loginDto.email}:`, emailError.message || emailError);
-          }
-          throw new UnauthorizedException('Veuillez vérifier votre adresse email avant de vous connecter. Un nouvel email de vérification vient de vous être envoyé. Vérifiez votre boîte de réception.');
-        }
         console.log(`[LOGIN] Email ou mot de passe incorrect pour: ${loginDto.email}`);
-      throw new UnauthorizedException('Email ou mot de passe incorrect');
+        throw new UnauthorizedException('Email ou mot de passe incorrect');
     }
 
       console.log(`[LOGIN] Utilisateur validé: ${user.email}`);
