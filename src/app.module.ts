@@ -6,6 +6,11 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import * as Joi from 'joi';
+import { AcademyModule } from './academy/academy.module';
+import { TeamsModule } from './teams/teams.module';
+import { JoinRequestsModule } from './join-requests/join-requests.module';
+import { TournamentsModule } from './tournaments/tournaments.module';
+import { RefereesModule } from './referees/referees.module';
 
 const DEFAULT_JWT_SECRET = 'default_jwt_secret_key_1234567890';
 
@@ -68,6 +73,11 @@ if (!process.env.JWT_SECRET || process.env.JWT_SECRET.length < 20) {
     }),
 
     AuthModule,
+    AcademyModule,
+    TeamsModule,
+    JoinRequestsModule,
+    TournamentsModule,
+    RefereesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

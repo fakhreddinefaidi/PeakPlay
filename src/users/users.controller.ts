@@ -25,28 +25,28 @@ import { Roles } from 'src/auth/decorators/role.decorators';
 export class UsersController {
   constructor(private readonly usersService: UsersService) { }
 
-  // Seul OWNER peut créer un utilisateur
+  // Seule ACADEMY peut créer un utilisateur
   @Post()
-  @Roles('OWNER')
-  @ApiOperation({ summary: 'Créer un nouvel utilisateur (OWNER uniquement)' })
+  @Roles('ACADEMY')
+  @ApiOperation({ summary: 'Créer un nouvel utilisateur (ACADEMY uniquement)' })
   @ApiResponse({ status: 201, description: 'Utilisateur créé avec succès.' })
-  @ApiResponse({ status: 403, description: 'Accès refusé : seuls les OWNER peuvent créer un utilisateur.' })
+  @ApiResponse({ status: 403, description: 'Accès refusé : seules les ACADEMY peuvent créer un utilisateur.' })
   create(@Body() createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto);
   }
 
-  // OWNER et ARBITRE peuvent consulter tous les utilisateurs
+  // ACADEMY et ARBITRE peuvent consulter tous les utilisateurs
   @Get()
-  @Roles('OWNER', 'ARBITRE')
-  @ApiOperation({ summary: 'Afficher la liste des utilisateurs (OWNER et ARBITRE uniquement)' })
+  @Roles('ACADEMY', 'ARBITRE')
+  @ApiOperation({ summary: 'Afficher la liste des utilisateurs (ACADEMY et ARBITRE uniquement)' })
   @ApiResponse({ status: 200, description: 'Liste des utilisateurs récupérée avec succès.' })
   findAll() {
     return this.usersService.findAll();
   }
 
-  // JOUEUR, OWNER, et ARBITRE peuvent consulter un utilisateur par ID
+  // JOUEUR, ACADEMY, et ARBITRE peuvent consulter un utilisateur par ID
   @Get(':id')
-  @Roles('JOUEUR', 'OWNER', 'ARBITRE')
+  @Roles('JOUEUR', 'ACADEMY', 'ARBITRE')
   @ApiOperation({ summary: 'Afficher les détails d’un utilisateur' })
   @ApiParam({ name: 'id', description: 'ID de l’utilisateur à consulter' })
   @ApiResponse({ status: 200, description: 'Utilisateur trouvé.' })
@@ -56,7 +56,7 @@ export class UsersController {
   }
   // seul le user connecter peut modifier son compte
   @Patch(':id')
-  @Roles('JOUEUR', 'OWNER', 'ARBITRE')
+  @Roles('JOUEUR', 'ACADEMY', 'ARBITRE')
   @ApiOperation({ summary: 'Modifier son propre compte' })
   @ApiParam({ name: 'id', description: 'ID de ton propre compte utilisateur' })
   @ApiResponse({ status: 200, description: 'Compte modifié avec succès.' })
@@ -75,13 +75,13 @@ export class UsersController {
     return this.usersService.update(id, updateUserDto);
   }
 
-  // Seul OWNER peut supprimer un utilisateur
+  // Seule ACADEMY peut supprimer un utilisateur
   @Delete(':id')
-  @Roles('OWNER')
-  @ApiOperation({ summary: 'Supprimer un utilisateur (OWNER uniquement)' })
-  @ApiParam({ name: 'id', description: 'ID de l’utilisateur à supprimer' })
+  @Roles('ACADEMY')
+  @ApiOperation({ summary: 'Supprimer un utilisateur (ACADEMY uniquement)' })
+  @ApiParam({ name: 'id', description: 'ID de l\'utilisateur à supprimer' })
   @ApiResponse({ status: 200, description: 'Utilisateur supprimé avec succès.' })
-  @ApiResponse({ status: 403, description: 'Accès refusé : seuls les OWNER peuvent supprimer un utilisateur.' })
+  @ApiResponse({ status: 403, description: 'Accès refusé : seules les ACADEMY peuvent supprimer un utilisateur.' })
   remove(@Param('id') id: string) {
     return this.usersService.remove(id);
   }

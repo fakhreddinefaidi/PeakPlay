@@ -28,7 +28,7 @@ export class User extends Document {
   @Prop({ required: false })
   tel?: number;
 
-  @Prop({ enum: ['JOUEUR', 'OWNER', 'ARBITRE'], default: 'JOUEUR' })
+  @Prop({ enum: ['JOUEUR', 'ACADEMY', 'ARBITRE'], default: 'JOUEUR' })
   role?: string;
 
   @Prop({ required: false })

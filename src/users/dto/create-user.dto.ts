@@ -2,6 +2,12 @@ import { IsString, IsDate, IsNotEmpty, IsNumber, IsEnum, IsEmail } from 'class-v
 import { Type } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
 
+export enum UserRole {
+  JOUEUR = 'JOUEUR',
+  ACADEMY = 'ACADEMY',
+  ARBITRE = 'ARBITRE',
+}
+
 export class CreateUserDto {
 
   @ApiProperty({ example: 'Wassim', description: 'Prénom de l\'utilisateur' })
@@ -41,7 +47,15 @@ export class CreateUserDto {
   @IsNotEmpty()
   password: string;
 
-  @ApiProperty({ example: 'JOUEUR', enum: ['JOUEUR', 'OWNER', 'ARBITRE'], description: 'Rôle attribué' })
-  @IsEnum(['JOUEUR', 'OWNER', 'ARBITRE'])
-  role: string;
+  @ApiProperty({ 
+    example: 'JOUEUR', 
+    enum: UserRole, 
+    enumName: 'UserRole',
+    description: 'Rôle attribué. Valeurs acceptées: JOUEUR, ACADEMY, ARBITRE' 
+  })
+  @IsEnum(UserRole, { 
+    message: 'role must be one of the following values: JOUEUR, ACADEMY, ARBITRE' 
+  })
+  @IsNotEmpty({ message: 'role should not be empty' })
+  role: UserRole;
 }

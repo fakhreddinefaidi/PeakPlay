@@ -1,6 +1,7 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { IsString, IsEmail, IsOptional, IsDate, IsNumber, IsEnum } from 'class-validator';
 import { Type } from 'class-transformer';
+import { UserRole } from './create-user.dto';
 
 export class UpdateUserDto {
   @ApiPropertyOptional({ example: 'Wassim', description: 'Nouveau prénom' })
@@ -40,10 +41,13 @@ export class UpdateUserDto {
 
   @ApiPropertyOptional({
     example: 'ARBITRE',
-    enum: ['JOUEUR', 'OWNER', 'ARBITRE'],
-    description: 'Nouveau rôle attribué',
+    enum: UserRole,
+    enumName: 'UserRole',
+    description: 'Nouveau rôle attribué. Valeurs acceptées: JOUEUR, ACADEMY, ARBITRE',
   })
-  @IsEnum(['JOUEUR', 'OWNER', 'ARBITRE'])
+  @IsEnum(UserRole, { 
+    message: 'role must be one of the following values: JOUEUR, ACADEMY, ARBITRE' 
+  })
   @IsOptional()
-  role?: string;
+  role?: UserRole;
 }
